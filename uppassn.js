@@ -33,7 +33,8 @@ function UP_init()
     if (_UP_INITIALIZED) {
         return;
     }
-
+    
+    UP_getSentText();
     var button = _UP_SUBMIT_BUTTON = UP_findSubmitButton();
     var textarea = _UP_INPUT_FIELD = UP_findTextArea(button);
     UP_setSubmitButtonState(button, _UP_BUTTONSTATE_INACTIVE);
@@ -131,6 +132,32 @@ function UP_submitButtonHandler(event)
     
     UP_setSubmitButtonState(_UP_SUBMIT_BUTTON, _UP_BUTTONSTATE_ACTIVE);
     _UP_SUBMIT_BUTTON.click();
+}
+
+/**
+ * @brief Extract possible sent text from URI string.
+ * Will only work for empty hostname (=> file needs to be opened directly).
+ */
+function UP_getSentText()
+{
+    if (document.location.search.length == 0
+            || document.location.hostname != "") {
+        return;
+    }
+    
+    var paramString = document.location.search.substr(1);
+    var parts = paramString.split("&");
+    var params = {};
+    
+    for (var i = 0; i < parts.length; ++i) {
+        var tmp = parts[i].split("=");
+        params[tmp[0]] = tmp[1];
+    }
+    
+    if (typeof(params["text"]) == "string" && params["text"] != "") {
+        var div = document.getElementById("sentText");
+        div.innerHTML = params["text"];
+    }
 }
 
 //==============================================================================
