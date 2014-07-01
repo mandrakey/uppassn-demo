@@ -202,6 +202,15 @@ function UP_containsBadWords(text)
     }
 }
 
+/**
+ * @brief Calculate the difference between two words.
+ * This means NOT the levenshtein distance but simply how many characters are 
+ * different. If one argument is no string, empty or equal the other the 
+ * algorithm returns 0.
+ * @param s First string to compare
+ * @param t Second string to compare
+ * @return Number of differenct characters
+ */
 function UP_wordDifference(s, t)
 {
     if (typeof(s) != "string" || s == "") {
@@ -228,6 +237,18 @@ function UP_wordDifference(s, t)
     return diff;
 }
 
+/**
+ * @brief Calculate the levenshtein distance between two words.
+ * If one argument is no string, empty or equal the other the algorithm 
+ * returns 0. This is a optimized version of the algorithm - references:
+ * - https://en.wikipedia.org/wiki/Levenshtein_distance#Iterative_with_two_matrix_rows: 
+ * Pseudocode implementation
+ * - http://www.codeproject.com/Articles/13525/Fast-memory-efficient-Levenshtein-algorithm: 
+ * Original article by Sten Hjelmqvist
+ * @param s First string to compare
+ * @param t Second string to compare
+ * @return Number of differenct characters
+ */
 function UP_levenshteinDistance(s, t)
 {
     if (typeof(s) != "string" || s == "") {
