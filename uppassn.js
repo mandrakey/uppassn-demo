@@ -195,11 +195,37 @@ function UP_containsBadWords(text)
                 continue;
             }
             
-            if (UP_levenshteinDistance(tmp[j], _BADWORDS[i]) < 2) {
+            if (UP_wordDifference(tmp[j], _BADWORDS[i]) < 2) {
                 return _BADWORDS[i];
             }
         }
     }
+}
+
+function UP_wordDifference(s, t)
+{
+    if (typeof(s) != "string" || s == "") {
+        return t.length;
+    }
+    if (typeof(t) != "string" || t == "") {
+        return s.length;
+    }
+    if (s == t) {
+        return 0;
+    }
+    
+    short = (s.length < t.length) ? s.toLowerCase() : t.toLowerCase();
+    long = (s.length >= t.length) ? s.toLowerCase() : t.toLowerCase();
+    
+    var diff = 0;
+    for (var i = 0, j = 0; i < short.length, j < long.length; ++i, ++j) {
+        while(short[i] != long[j] && j < long.length) {
+            ++diff;
+            ++j;
+        }
+    }
+    
+    return diff;
 }
 
 function UP_levenshteinDistance(s, t)
