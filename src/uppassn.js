@@ -200,6 +200,8 @@ function UP_containsBadWords(text)
             }
         }
     }
+    
+    return null;
 }
 
 /**
