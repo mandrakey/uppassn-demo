@@ -118,21 +118,22 @@ function UP_setSubmitButtonState(button, state)
 function UP_submitButtonHandler(event)
 {
     text = _UP_INPUT_FIELD.value.toLowerCase();
-    for (var i = 0; i < _BADWORDS.length; ++i) {
-        var badword = UP_containsBadWords(text);
-        if (badword != null) {
-            var post = confirm("ACHTUNG\n\nDu hast das Wort '" + badword
+    var badword = UP_containsBadWords(text);
+    if (badword != null) {
+        var post = confirm("ACHTUNG\n\nDu hast das Wort '" + badword
                 + "' verwendet. Bist du dir sicher, dass du diesen Text so "
                 + "absenden möchtest?");
-            
-            if (!post) {
-                return;
-            }
+        
+        if (!post) {
+            return;
         }
     }
     
-    UP_setSubmitButtonState(_UP_SUBMIT_BUTTON, _UP_BUTTONSTATE_ACTIVE);
-    _UP_SUBMIT_BUTTON.click();
+    // Commented for Facebook-test: If data shall be sent, no real sending!
+    /*UP_setSubmitButtonState(_UP_SUBMIT_BUTTON, _UP_BUTTONSTATE_ACTIVE);
+    _UP_SUBMIT_BUTTON.click();*/
+    alert("The text now would have been sent.");
+    _UP_INPUT_FIELD.value = "";
 }
 
 /**
