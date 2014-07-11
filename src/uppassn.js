@@ -1,3 +1,13 @@
+// ==UserScript==
+// @name        UPPASSN
+// @namespace   de.hu-berlin.smuks.uppassn
+// @description 
+// @include     
+// @exclude     
+// @version     1
+// @grant       none
+// ==/UserScript==
+
 /**
  * @brief UPPASSN demonstration.
  * This file is intended to be used for demonstration purposes on the 
@@ -34,10 +44,14 @@ function UP_init()
         return;
     }
     
-    UP_getSentText();
     var button = _UP_SUBMIT_BUTTON = UP_findSubmitButton();
+    if (button == null) {
+        console.log("UP_init postponed.");
+        return;
+    }
     var textarea = _UP_INPUT_FIELD = UP_findTextArea(button);
     UP_setSubmitButtonState(button, _UP_BUTTONSTATE_INACTIVE);
+    console.log("UP_init ok");
 }
 
 /**
@@ -120,13 +134,10 @@ function UP_submitButtonHandler(event)
     text = _UP_INPUT_FIELD.value.toLowerCase();
     var badword = UP_containsBadWords(text);
     if (badword != null) {
-        var post = confirm("ACHTUNG\n\nDu hast das Wort '" + badword
-                + "' verwendet. Bist du dir sicher, dass du diesen Text so "
-                + "absenden möchtest?");
-        
-        if (!post) {
-            return;
-        }
+        UP_displayMessage("Du hast das Wort <strong>" + badword + "</strong> "
+            + "verwendet. Bist du dir sicher, dass du diesen Text so absenden "
+            + "möchtest?");
+        return;
     }
     
     // Commented for Facebook-test: If data shall be sent, no real sending!
@@ -203,6 +214,43 @@ function UP_containsBadWords(text)
     }
     
     return null;
+}
+
+function UP_displayMessage(text)
+{
+    var html = '<div style="display: hidden; position: fixed; top: 0; bottom: 0; left: 0; right: 0; background: rgba(0, 0, 0, 0.4); z-index: 500;">\n'
+        + '<div style="position: absolute; top: 25%; left: 25%; right: 25%; background: #fff; box-shadow: 0px 2px 26px rgba(0, 0, 0, 0.3), 0px 0px 0px 1px rgba(0, 0, 0, 0.1);">\n'
+        + '    <div style="background: #F5F6F7; color: #4E5665; font-size: 12pt; font-weight: bold; padding: 10px 12px 10px 12px; border-bottom: 1px solid #e5e5e5;">\n'
+        + '        Das möchtest Du vielleicht nicht veröffentlichen ...\n'
+        + '    </div>\n'
+        + '    <div id="UP_messageContent" style="padding: 12px; font-size: 14px; color: #4E5665; background: #fff;">\n'
+        + '        '+text+'\n'
+        + '    </div>\n'
+        + '    <div style="background: #fff; border-top: 1px solid #DADCE0; font-size: 10pt; padding: 12px 0 12px 0; margin: 0 12px 0 12px;">\n'
+        + '        powered by <a href="#" style="color: #6D84B4; text-decoration: none;">UPPASSN</a>\n'
+        + '        <div style="float: right;">\n'
+        + '            <button style="background: #4E69A2; color: #fff; font-weight: bold; font-size: 12px; border: 1px solid #3C5488; padding: 0 8px 0 8px; line-height: 22px; border-radius: 2px; cursor: pointer;" onclick="UP_hideMessage();">Überarbeiten</button>\n'
+        + '            <button style="background: #fff; color: #000; font-weight: bold; font-size: 12px; border: 1px solid #B6B7B9; padding: 0 8px 0 8px; line-height: 22px; border-radius: 2px; cursor: pointer;" onclick="UP_sendAnyway();">Senden</button>\n'
+        + '        </div>\n'
+        + '    </div>\n'
+        + '</div>\n'
+        + '</div>\n\n';
+    
+    var elem = document.createElement("div");
+    elem.id = "UP_message";
+    elem.innerHTML = html;
+    document.body.appendChild(elem);
+}
+
+function UP_hideMessage()
+{
+    document.getElementById("UP_message").remove();
+}
+
+function UP_sendAnyway()
+{
+    UP_hideMessage();
+    alert("Message would be sent now.");
 }
 
 /**
@@ -292,7 +340,7 @@ function UP_levenshteinDistance(s, t)
 //==============================================================================
 // AUTOSTART UPPASSN
 
-setTimeout("UP_init();", 500);
+//~ setTimeout("UP_init();", 500);
 
 //==============================================================================
 // BAD WORDS DICTIONARY

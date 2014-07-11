@@ -340,7 +340,7 @@ unsafeWindow.UP_levenshteinDistance = function(s, t)
 //==============================================================================
 // AUTOSTART UPPASSN
 
-setTimeout("UP_init();", 500);
+//~ setTimeout("UP_init();", 500);
 
 //==============================================================================
 // BAD WORDS DICTIONARY
